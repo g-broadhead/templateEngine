@@ -10,9 +10,99 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+const employeeData = [];
+
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
+function questionPrompts() {
+  inquirer.prompt([
+    {
+      type: "input",
+      message: "Please enter your name.",
+      name: "name"
+    },
+    {
+      type: "input",
+      message: "Please enter your ID.",
+      name: "id"
+    },
+    {
+      type: "input",
+      message: "Please enter your email.",
+      name: "email"
+    },
+    {
+      type: "list",
+      message: "Please enter your current role.",
+      name: "role"
+      choices: [
+        "Manager",
+        "Engineer",
+        "Intern"
+      ]
+    },
+  ])
+    .then(answers => {
+      if (answers === "Manager") {
+        inquirer.prompt([
+          type: "input",
+          message: "Please enter your office number."
+        name: "officeNumber"
+        ])
+          .then(addManager => {
+            const newManager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber)
+            moreEmployees()
+          })
+      } else if (answers === "Engineer") {
+        inquirer.prompt([
+          type: "input",
+          message: "Please enter your gitHub."
+          name: "gitHub"
+        ])
+          .then(addEngineer => {
+            const newEngineer = new Engineer(answers.name, answers.id, answers.email, answers.github)
+            moreEmployees()
+          })
+      } else if (answers === "Intern") {
+        inquirer.prompt([
+          type: "input",
+          message: "Please enter your school."
+          name: "school"
+        ])
+          .then(addIntern => {
+            const newIntern = new Intern(answers.name, answers.id, answers.email, answers.school)
+            moreEmployees()
+          })
+      }
+    })
+}
+
+const moreEmployees = () => {
+  inquirer.prompt({
+    type: "confirm",
+    message: "Add another employee?",
+    name: "addNew"
+  })
+    .then(data => {
+      if (data.moreEmployees == true) {
+        questionPrompts()
+      }
+      else {
+        writeToFile("team.html",)
+      }
+    })
+}
+
+function writeToFile(fileName, data) {
+  fs.writeFile(fileName, data, err => {
+    if (err) {
+      return console.log(err)
+    }
+
+    console.log("Employee summary completed.")
+  })
+}
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
