@@ -89,7 +89,12 @@ const moreEmployees = () => {
         questionPrompts()
       }
       else {
-        writeToFile("team.html",)
+        fs.mkdir('output', { recursive: true }, (err => {
+          if (err) {
+            console.log(err)
+          }
+        }))
+        writeToFile("./output/team.html", render(employeeData))
       }
     })
 }
@@ -97,7 +102,7 @@ const moreEmployees = () => {
 function writeToFile(fileName, data) {
   fs.writeFile(fileName, data, err => {
     if (err) {
-      return console.log(err)
+      console.log(err)
     }
 
     console.log("Employee summary completed.")
