@@ -35,7 +35,7 @@ function questionPrompts() {
     {
       type: "list",
       message: "Please enter your current role.",
-      name: "role"
+      name: "role",
       choices: [
         "Manager",
         "Engineer",
@@ -44,32 +44,32 @@ function questionPrompts() {
     },
   ])
     .then(answers => {
-      if (answers === "Manager") {
-        inquirer.prompt([
+      if (answers.role === "Manager") {
+        inquirer.prompt([{
           type: "input",
-          message: "Please enter your office number."
-        name: "officeNumber"
-        ])
+          message: "Please enter your office number.",
+          name: "officeNumber"
+        }])
           .then(addManager => {
             const newManager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber)
             moreEmployees()
           })
-      } else if (answers === "Engineer") {
-        inquirer.prompt([
+      } else if (answers.role === "Engineer") {
+        inquirer.prompt([{
           type: "input",
-          message: "Please enter your gitHub."
+          message: "Please enter your gitHub.",
           name: "gitHub"
-        ])
+        }])
           .then(addEngineer => {
             const newEngineer = new Engineer(answers.name, answers.id, answers.email, answers.github)
             moreEmployees()
           })
-      } else if (answers === "Intern") {
-        inquirer.prompt([
+      } else if (answers.role === "Intern") {
+        inquirer.prompt([{
           type: "input",
-          message: "Please enter your school."
+          message: "Please enter your school.",
           name: "school"
-        ])
+        }])
           .then(addIntern => {
             const newIntern = new Intern(answers.name, answers.id, answers.email, answers.school)
             moreEmployees()
@@ -108,6 +108,8 @@ function writeToFile(fileName, data) {
     console.log("Employee summary completed.")
   })
 }
+
+questionPrompts()
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
