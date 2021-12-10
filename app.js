@@ -10,7 +10,8 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-const employeeData = [];
+let employeeData = [];
+let globalData = [];
 
 
 // Write code to use inquirer to gather information about the development team members,
@@ -19,23 +20,23 @@ function questionPrompts() {
   inquirer.prompt([
     {
       type: "input",
-      message: "Please enter your name.",
-      name: "name"
+      name: "name",
+      message: "Please enter your name."
     },
     {
       type: "input",
-      message: "Please enter your ID.",
-      name: "id"
+      name: "id",
+      message: "Please enter your ID."
     },
     {
       type: "input",
-      message: "Please enter your email.",
-      name: "email"
+      name: "email",
+      message: "Please enter your email."
     },
     {
       type: "list",
-      message: "Please enter your current role.",
       name: "role",
+      message: "Please enter your current role.",
       choices: [
         "Manager",
         "Engineer",
@@ -47,31 +48,34 @@ function questionPrompts() {
       if (answers.role === "Manager") {
         inquirer.prompt([{
           type: "input",
-          message: "Please enter your office number.",
-          name: "officeNumber"
+          name: "officeNumber",
+          message: "Please enter your office number."
         }])
           .then(addManager => {
-            const newManager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber)
+            const newManager = new Manager(answers.name, answers.id, answers.email, addManager.officeNumber)
+            employeeData.push(newManager)
             moreEmployees()
           })
       } else if (answers.role === "Engineer") {
         inquirer.prompt([{
           type: "input",
-          message: "Please enter your gitHub.",
-          name: "gitHub"
+          name: "github",
+          message: "Please enter your gitHub."
         }])
           .then(addEngineer => {
-            const newEngineer = new Engineer(answers.name, answers.id, answers.email, answers.github)
+            const newEngineer = new Engineer(answers.name, answers.id, answers.email, addEngineer.github)
+            employeeData.push(newEngineer)
             moreEmployees()
           })
       } else if (answers.role === "Intern") {
         inquirer.prompt([{
           type: "input",
-          message: "Please enter your school.",
-          name: "school"
+          name: "school",
+          message: "Please enter your school."
         }])
           .then(addIntern => {
-            const newIntern = new Intern(answers.name, answers.id, answers.email, answers.school)
+            const newIntern = new Intern(answers.name, answers.id, answers.email, addIntern.school)
+            employeeData.push(newIntern)
             moreEmployees()
           })
       }
@@ -81,11 +85,11 @@ function questionPrompts() {
 const moreEmployees = () => {
   inquirer.prompt({
     type: "confirm",
-    message: "Add another employee?",
-    name: "addNew"
+    name: "addNew",
+    message: "Add another employee?"
   })
     .then(data => {
-      if (data.moreEmployees == true) {
+      if (data.addNew == true) {
         questionPrompts()
       }
       else {
